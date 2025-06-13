@@ -88,7 +88,7 @@
 (setq popweb-dict-audio-process nil)
 
 (defcustom popweb-dict-say-word-p t
-   "Whether play voice when search words.
+  "Whether play voice when search words.
 Default value is t."
   :type 'boolean)
 
@@ -110,7 +110,7 @@ Default value is t."
                  player
                  nil
                  player
-                 (format "http://dict.youdao.com/dictvoice?type=2&audio=%s" (url-hexify-string word))))
+                 (format "https://dict.youdao.com/dictvoice?type=2&audio=%s" (url-hexify-string word))))
         (message "mpv, mplayer or mpg123 is needed to play word voice")))))
 
 (defun popweb-dict-prompt-input (prompt)
@@ -165,7 +165,7 @@ Otherwise return word around point."
                 (width-scale 0.3)
                 (height-scale 0.5)
                 (word (nth 0 info))
-                (url (format ,url word))
+                (url (format ,url (url-hexify-string word)))
                 (js-code (format "try { %s } catch (err) { console.log(err.message) }" ,js-code))
                 (js-file (format "%s" ,js-file))
                 (args (nth 0 (cdr info))))
@@ -191,8 +191,8 @@ Otherwise return word around point."
          (interactive)
          (,func-hide-after-move)
          (popweb-start ',func-translate (list (or word (popweb-dict-prompt-input (format "%s dict: " (capitalize ,name)))) args))
-         (add-hook 'post-command-hook #',func-hide-after-move))
-       )))
+         (add-hook 'post-command-hook #',func-hide-after-move)))))
+
 
 (popweb-dict-create "bing"
                     "http://www.bing.com/dict/search?mkt=zh-cn&q=%s"
@@ -201,8 +201,8 @@ Otherwise return word around point."
                      "document.getElementsByTagName('html')[0].style.visibility = 'hidden'; "
                      "document.getElementsByClassName('lf_area')[0].style.visibility = 'visible' ; "
                      "document.getElementsByTagName('header')[0].style.display = 'none'; "
-                     "document.getElementsByClassName('contentPadding')[0].style.padding = '10px';"
-                     ))
+                     "document.getElementsByClassName('contentPadding')[0].style.padding = '10px';"))
+
 
 (popweb-dict-create "youdao"
                     "https://www.youdao.com/w/eng/%s"
@@ -216,8 +216,8 @@ Otherwise return word around point."
                      "document.getElementById('container').style.padding = '0'; "
                      "document.getElementById('container').style.paddingLeft = '10px'; "
                      "document.getElementById('container').style.margin = '0'; "
-                     "document.getElementById('topImgAd').style.display = 'none'; "
-                     ))
+                     "document.getElementById('topImgAd').style.display = 'none'; "))
+
 
 (popweb-dict-create "youglish"
                     "https://youglish.com/pronounce/%s/english?"
@@ -230,8 +230,8 @@ Otherwise return word around point."
                      "document.querySelectorAll('div .g_pr_ad_network')[1].style.display = 'none' ; "
                      "document.querySelectorAll('div .g_pr_ad_network')[3].style.margin = '0' ; "
                      "Array.from(document.querySelectorAll('ins')).forEach(e => { e.style.display = 'none' }); "
-                     "Array.from(document.querySelectorAll('iframe:not(#player)')).forEach(e => { e.style.display = 'none' }); "
-                     ))
+                     "Array.from(document.querySelectorAll('iframe:not(#player)')).forEach(e => { e.style.display = 'none' }); "))
+
 
 (popweb-dict-create "dictcn"
                     "http://dict.cn/%s"
@@ -249,8 +249,34 @@ Otherwise return word around point."
                      "document.getElementById('content').style.margin = '0';"
                      "document.getElementById('footer').style.display = 'none';"
                      "document.getElementsByClassName('copyright')[0].style.display = 'none';"
-                     "Array.from(document.querySelectorAll('iframe')).forEach(e => { e.style.display = 'none' })"
-                     ))
+                     "Array.from(document.querySelectorAll('iframe')).forEach(e => { e.style.display = 'none' })"))
+
+(popweb-dict-create
+ "eudic"
+ "https://dict.eudic.net/dicts/en/%s"
+ (concat
+  "window.scrollTo(30, 0); "
+  "document.getElementsByTagName('header')[0].style.visibility = 'hidden'; "
+  "document.getElementById('header').style.display = 'none' ; "
+  "document.getElementById('search-box').style.display = 'none' ; "
+  "document.getElementById('head-bar').style.display = 'none' ; "
+  "document.getElementById('scrollToTop').style.display = 'none' ; "
+  "document.getElementById('noteRelate').style.display = 'none' ; "
+  "document.getElementById('addNote').style.display = 'none' ; "
+  "document.getElementById('correct').style.display = 'none' ; "
+  "document.getElementsByClassName('expHead')[0].style.display = 'none' ;"
+  "document.getElementsByClassName('selectTransControl')[0].style.display = 'none' ;"
+  "document.getElementsByClassName('wordsRating')[0].style.display = 'none' ;"
+  "document.getElementById('ui-id-4').text = '词典' ; "
+  "document.getElementById('ui-id-6').text = '词组' ; "
+  "document.getElementById('ui-id-7').text = '例句' ; "
+  "document.getElementById('ui-id-8').style.display = 'none' ; "
+  "document.getElementById('ui-id-9').style.display = 'none' ; "
+  "document.getElementById('ui-id-10').text = '关联' ; "
+  "document.getElementById('ui-id-11').text = '英英' ; "
+  "document.getElementById('ui-id-12').style.display = 'none' ; "
+  "document.getElementById('ui-id-13').text = '检索' ; "))
+
 
 (provide 'popweb-dict)
 
