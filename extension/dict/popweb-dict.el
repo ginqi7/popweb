@@ -87,6 +87,14 @@
 (setq popweb-dict-module-path (concat (file-name-directory load-file-name) "popweb-dict.py"))
 (setq popweb-dict-audio-process nil)
 
+(defcustom popweb-dict-window-width-scale 0.3
+  "Display the popweb dictionary window width scaled to the Emacs window."
+  :type 'integer)
+
+(defcustom popweb-dict-window-height-scale 0.5
+  "Display the popweb dictionary window height scaled to the Emacs window."
+  :type 'integer)
+
 (defcustom popweb-dict-say-word-p t
   "Whether play voice when search words.
 Default value is t."
@@ -162,8 +170,8 @@ Otherwise return word around point."
                 (frame-y (cdr (frame-position)))
                 (frame-w (frame-outer-width))
                 (frame-h (frame-outer-height))
-                (width-scale 0.3)
-                (height-scale 0.5)
+                (width-scale popweb-dict-window-width-scale)
+                (height-scale popweb-dict-window-height-scale)
                 (word (nth 0 info))
                 (url (format ,url (url-hexify-string word)))
                 (js-code (format "try { %s } catch (err) { console.log(err.message) }" ,js-code))
