@@ -197,6 +197,10 @@ Turn on this option will improve start speed."
   "Directory where popweb will store configuration files."
   :type 'directory)
 
+(defcustom popweb-use-mouse-position nil
+  "Dose it use mouse-position to locate the popweb frame?"
+  :type 'boolean)
+
 
 (defun popweb-call-async (method &rest args)
   "Call Python EPC function METHOD and ARGS asynchronously."
@@ -352,17 +356,20 @@ WEBENGINE-INCLUDE-PRIVATE-CODEC is only useful when app-name is video-player."
   (setq popweb--first-start-args nil))
 
 (defun popweb-get-cursor-coordinate ()
-  (if (derived-mode-p 'eaf-mode)
+  (if (or (derived-mode-p 'eaf-mode)
+          popweb-use-mouse-position)
       (mouse-absolute-pixel-position)
     (window-absolute-pixel-position)))
 
 (defun popweb-get-cursor-x-offset ()
-  (if (derived-mode-p 'eaf-mode)
+  (if (or (derived-mode-p 'eaf-mode)
+          popweb-use-mouse-position)
       30
     0))
 
 (defun popweb-get-cursor-y-offset ()
-  (if (derived-mode-p 'eaf-mode)
+  (if (or (derived-mode-p 'eaf-mode)
+          popweb-use-mouse-position)
       30
     (line-pixel-height)))
 
